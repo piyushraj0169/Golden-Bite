@@ -1,0 +1,281 @@
+
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap'); */
+
+@import url('https://fonts.googleapis.com/css2?family=Momo+Signature&family=Momo+Trust+Sans:wght@200..800&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Sixtyfour&family=Stack+Sans+Notch:wght@200..700&display=swap" rel="stylesheet');
+*{
+   font-family: "Roboto Condensed", sans-serif;
+  /* color: black; */
+}
+
+.banner{
+  background-image: url("home.jpg");
+  height: 93vh;
+  background-repeat: no-repeat;
+
+  background-size: cover;
+  background-position: center;
+  
+}
+
+
+.banner-text{
+  text-align: center;
+  padding-top: 20%;
+  color: white;
+  font-size: 50px;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.btn{
+  background-color: black important;
+}
+
+
+.col-lg-3{
+  flex-direction: row;
+}
+
+.card-feature{
+ background-color: #131313;
+ color:#fff;
+ text-align:centre;
+ padding: 50px 0px;
+ gap:inherit;
+ margin: 10px;
+ border-radius: 10px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ }
+  
+ .icon-feature{
+ font-size: 50px;
+ margin-bottom: 20px;
+ }
+
+.card-feature p{
+ font-size:16px;
+ font-weight: bold;
+
+}
+
+.card-feature:hover{
+  background-color: #282828;
+  cursor: pointer;
+  transform: scale(1.09);
+  transition: transform 0.3s ease;
+}
+
+.row mt-4{
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+
+.CallUs{
+  background-color: #1f1f1f;
+  color:#fff;
+  text-align:centre;
+  padding: 50px 0px;
+}
+
+.CallUs h5{
+  font-size:25px;
+  font-weight: bold;
+} 
+
+.image-service{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.service-h1{
+  border: 2px solid black;
+  border-radius: 5px;
+  background-color: #ceb187;
+  width: 35vh;
+  text-align: center;
+  padding: 10px;
+  margin: 20px auto;
+  font-size: 30px;
+  font-weight: bold;
+
+}
+
+.b1{
+  font-size: 25px;
+}
+
+.cart-icon-minus{
+   color: #ff0000;
+   font-size: 30px;
+}
+.cart-icon-minus:hover{
+   cursor: pointer;
+}
+.cart-icon-plus{
+ color:#008000;
+   font-size: 30px;  
+}
+.cart-icon-plus:hover{
+   cursor: pointer;
+}
+
+.cart-icon-delete:hover{
+   font-size: 25px;
+   cursor: pointer;
+}
+.image-cart{
+   height: 100px;
+   width: 100px;
+   border:5px solid red;
+   border-radius: 50%;
+}
+
+.callUs{
+   background-color: #1f1f1f;
+   color: #fff;
+   text-align: center;
+   padding-top: 50px;
+}
+.callUs h5{
+   font-size: 25px;
+}
+
+.team-img {
+  width: 100%;
+  height: 300px;     
+  object-fit: cover; 
+  border-radius: 10px;
+}
+
+.about-img {
+  width: 100%;
+  height: 250px;   
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+:root {
+  --gold: #ffce00;
+}
+
+.footer-section {
+  background: #1b1b1b;
+  border-top: 2px solid var(--gold);
+}
+
+.footer-title {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.footer-text {
+  color: #e4e4e4;
+  margin: 3px 0;
+}
+
+.footer-list {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-list li {
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #dcdcdc;
+  transition: 0.3s;
+}
+
+.footer-list li:hover {
+  color: var(--gold);
+  padding-left: 6px;
+}
+
+.footer-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #e6e6e6;
+}
+
+.footer-icon:hover {
+  color: var(--gold);
+  transform: scale(1.22);
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 70px);
+  gap: 8px;
+}
+
+.gallery img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.gallery img:hover {
+  transform: scale(1.08);
+  box-shadow: 0px 0px 10px var(--gold);
+}
+
+/* COPYRIGHT BAR */
+.footer-bottom {
+  background: #111;
+  color: var(--gold);
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+
+
+.newsletter-box {
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid var(--gold);
+}
+
+.newsletter-input {
+  border: none;
+  padding: 8px;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.newsletter-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.newsletter-btn {
+  background: var(--gold);
+  border: none;
+  padding: 0 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.newsletter-btn:hover {
+  background: #f3c200;
+  color: #000;
+}
+
+.golden{
+  color: #ffce00;
+ font-size:30px;
+}
