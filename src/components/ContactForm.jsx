@@ -1,8 +1,8 @@
 function ContactForm(){
     return(
         <div className="container mt-5">
-            <h3 className="text-center">If You Have Any Query,<br/> Please Contact Us</h3>
-            <p className="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque quod voluptate quam iste earum perspiciatis reiciendis. Totam eius cum, iste voluptas inventore iusto, vel, nobis voluptates sit porro expedita rem!</p>
+            <h3 className="text-center">Need Assistance? Contact Our Support Team</h3>
+            <p className="text-center">If you’re facing any issue or simply want to know more about our services, fill out the form below. Our team will get back to you shortly.</p>
             <div>
                 <form>
                     <div className="row">

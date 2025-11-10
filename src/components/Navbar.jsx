@@ -12,7 +12,7 @@ function Navbar(){
          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
            <div className="navbar-nav ms-auto">
               <NavLink className="nav-link" to="/">Home</NavLink>
-              <NavLink className="nav-link" to="/products">Products</NavLink>
+              <NavLink className="nav-link" to="/productlist">Products</NavLink>
               <NavLink className="nav-link" to="/services">Services</NavLink>
               <NavLink className="nav-link" to="/contact">Contact</NavLink>
               <NavLink className="nav-link" to="/about">About</NavLink>

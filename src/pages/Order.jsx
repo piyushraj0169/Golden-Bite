@@ -1,12 +1,14 @@
 import { useContext } from "react"
 import { LuIndianRupee } from "react-icons/lu"
 import { StoreContext } from "../context/StoreContext"
+import Cart1 from '../pages/Cart1'
 function Order(){
     const{getTotalCartAmount}=useContext(StoreContext)
     return(
         <div className="container mt-5">
             <div className="row">
                 <div className="col-lg-6">
+                    
                     <p className="my-2 fw-bold">
                         Delivery Information
                     </p>
@@ -38,14 +40,21 @@ function Order(){
                              
                     </form>
                 </div>
-                <div className="col-lg-6">
+                <div className="col-lg-3">
                     <div className="mt-5">
                         <p>Payment:<LuIndianRupee className="text-success"/> <span className="fw-bold">{getTotalCartAmount()}</span></p>
                     </div>
                     <div className="mt-3">
+                        
                     <button className="btn btn-dark">Proceed To Payment</button>
                 </div>
+                
                 </div>
+                <div className="col-lg-3">
+                        <Cart1/>
+
+                    </div>
+                
             </div>
 
             <br></br>

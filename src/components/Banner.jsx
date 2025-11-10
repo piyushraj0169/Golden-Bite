@@ -1,14 +1,16 @@
 
-import {NavLink} from 'react-router-dom'
-function Banner({header_text})
+import {Link} from 'react-router-dom'
+function Banner({header_text,header_line})
 {
+    
+
     return(
-        <div className="banner">
+        <div className="banner ">
             <div className="banner-text">
-                <h1>{header_text}</h1>
-                <p>"A bakery is where dreams rise and delicious memories are made"</p>
+                <h1 className="header_text">{header_text}!</h1>
+                <p className="header_text">{header_line}</p>
                 <div>
-                    <NavLink to="#" className="btn-order">Order Now</NavLink>     
+                   <Link to="/productlist" className="btn-order">Order Now</Link>
                 </div>
             </div>
         </div>
@@ -20,7 +22,7 @@ export default Banner
 
 
 
-
+// "A bakery is where dreams rise and delicious memories are made"
 
 
 

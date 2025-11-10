@@ -1,19 +1,21 @@
 import { FaFacebookF, FaTwitter, FaYoutube, FaLinkedinIn } from "react-icons/fa";
+import { Link } from "react-router-dom";
+
 
 
 function Footer() {
   return (
     <>
-      <footer className="footer-section text-light py-5 mt-3">
+      <footer className="footer-section text-light py-5 mt-5">
         <div className="container">
           <div className="row gy-4">
 
             {/* Office Address */}
             <div className="col-md-4">
               <h5 className="footer-title">Office Address</h5>
-              <p className="footer-text">123 Street, New York, USA</p>
-              <p className="footer-text">+012 345 67890</p>
-              <p className="footer-text">info@example.com</p>
+              <p className="footer-text">123 Street, Mohali, Punjab</p>
+              <p className="footer-text">+91 2330169000</p>
+              <p className="footer-text">goldenbite@gmail.com</p>
 
               <div className="d-flex gap-3 mt-3">
                 <FaFacebookF className="footer-icon" />
@@ -24,16 +26,17 @@ function Footer() {
             </div>
 
             {/* Quick Links */}
-            <div className="col-md-5">
-              <h5 className="footer-title">Quick Links</h5>
-              <ul className="footer-list">
-                <li>About Us</li>
-                <li>Contact Us</li>
-                <li>Our Services</li>
-                <li>Terms & Condition</li>
-                <li>Support</li>
-              </ul>
-            </div>
+        <div className="col-md-5">
+                <h5 className="footer-title">Quick Links</h5>
+               <ul className="footer-list">
+                  <li><Link to="/about" className="footer-link">About Us</Link></li>
+                  <li><Link to="/contact" className="footer-link">Contact Us</Link></li>
+                  <li><Link to="/services" className="footer-link">Our Services</Link></li>
+                  <li><Link to="/termsandcondition" className="footer-link">Terms & Condition</Link></li>
+                  <li><Link to="/support" className="footer-link">Support</Link></li>
+             </ul>
+          </div>
+
 
           
 

@@ -3,9 +3,10 @@ import ContactForm from "../components/ContactForm"
 
 function Contact(){
     const header_text="Contact Us"
+    const header_line="Have Questions? We’re Here to Help"
     return(
         <div>
-            <Banner header_text={header_text}/>
+            <Banner header_text={header_text} header_line={header_line}/>
             <ContactForm/>
         </div>
     )

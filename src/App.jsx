@@ -8,6 +8,15 @@ import Contact from './pages/Contact'
 import Cart from './pages/Cart'
 import Order from './pages/Order'
 import Footer from './components/Footer'
+import ProductList from './components/ProductList'
+import Products from './pages/Products'
+import TermsAndConditions from './pages/TermsAndCondition'
+import Support from './pages/Support'
+
+
+
+
+
 function App()
 {
   return(
@@ -21,6 +30,9 @@ function App()
         <Route path='/about' element={<About/>}/>
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/order' element={<Order/>}/>
+        <Route path='/productlist' element={<Products />} />
+        <Route path='/termsandcondition' element={<TermsAndConditions/>} />
+        <Route path='/support' element={<Support />} />
       </Routes> 
      
       <Footer/>

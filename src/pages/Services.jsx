@@ -1,16 +1,19 @@
 import Banner from "../components/Banner"
 import OurFeature from "../components/OurFeature"
 import OurServices from "../components/OurServices"
+import HoneyComb from "../components/HoneyComb"
 
 
 
 function Services(){
-    const header_text="Services"
+    const header_text=" Bakery Services"
+    const header_line="From Our Oven to Your Heart"
     return(
         <div>
-            <Banner header_text={header_text}/>
+            <Banner header_text={header_text} header_line={header_line}/>
             <OurFeature/>
             <OurServices/>
+            <HoneyComb/>
         </div>
     )
 }

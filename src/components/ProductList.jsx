@@ -9,7 +9,7 @@ function ProductList(){
     const{product_list,cartItems, addToCart,removeFromCart}=useContext(StoreContext)
     
     return(
-        <div className="container mt-5">
+        <div className="container mt-5 ">
             <div className="row g-3">
                 {
                     product_list.map((product)=>{
@@ -19,18 +19,21 @@ function ProductList(){
                                         <img src={product.image} className="card-img-top" alt="..."/>
                                                 <div className="card-body">
                                                     <p className="card-text text-danger">{product.name}</p>
-                                                    <p className="card-text text-success"><LuIndianRupee/>{product.price}</p>
-                                                    <div>
-                                                        
-                                                      {
-                                                            !cartItems[product._id]?<FaCartPlus className="add-to-cart" onClick={()=>addToCart(product._id)} />:<div>
-                                                                <FaSquareMinus className="cart-icon-minus" onClick={()=>removeFromCart(product._id)}/>
-                                                                {<span className="cart-counter">{cartItems[product._id]}</span>}
-                                                             <FaPlusSquare className="cart-icon-plus" onClick={()=>addToCart(product._id)}/>
-                                                            </div>
-                                                        }                                          
-                                                    </div>
-                                                </div>
+                                                   
+                                                   <div className="d-flex justify-content-between align-items-center">
+                                                            <p className="card-text text-success m-0"> <LuIndianRupee /> {product.price}</p>
+
+                               {
+                                       !cartItems[product._id] ? (<FaCartPlus className="add-to-cart" onClick={() => addToCart(product._id)} /> ) : (
+                                         <div className="d-flex align-items-center"> <FaSquareMinus className="cart-icon-minus me-2" onClick={() => removeFromCart(product._id)} />
+                                         <span className="cart-counter">{cartItems[product._id]}</span>
+                                         <FaPlusSquare className="cart-icon-plus ms-2" onClick={() => addToCart(product._id)} />
+                                            </div>)
+                                            
+                                }
+                                            </div>
+
+                                            </div>
                                     </div>
                             </div>
                         )
@@ -61,7 +64,24 @@ export default ProductList
 
 
 
-
+{/* <div className="card-body">
+                                                    <p className="card-text text-danger">{product.name}</p>
+                                                    <p className="card-text text-success"><LuIndianRupee/>{product.price}</p>
+                                                   <div>
+                                                    
+                                                        
+                                                        
+                                                      {
+                                                            !cartItems[product._id]?<FaCartPlus className="add-to-cart" onClick={()=>addToCart(product._id)} />:<div>
+                                                                <FaSquareMinus className="cart-icon-minus" onClick={()=>removeFromCart(product._id)}/>
+                                                                {<span className="cart-counter">{cartItems[product._id]}</span>}
+                                                             <FaPlusSquare className="cart-icon-plus" onClick={()=>addToCart(product._id)}/>
+                                                            </div>
+                                                        }       
+                                                                                          
+                                                    
+                                                    </div>
+                                                </div>
 
 
 
@@ -109,4 +129,4 @@ export default ProductList
 
 
 
-// export default ProductList; *\
+// export default ProductList; *\ */}
