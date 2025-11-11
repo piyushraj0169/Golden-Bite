@@ -10,7 +10,7 @@ function Banner({header_text,header_line})
                 <h1 className="header_text">{header_text}!</h1>
                 <p className="header_text">{header_line}</p>
                 <div>
-                   <Link to="/productlist" className="btn-order">Order Now</Link>
+                   <Link to="/ProductList" className="btn-order">Order Now</Link>
                 </div>
             </div>
         </div>

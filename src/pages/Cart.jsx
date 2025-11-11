@@ -42,7 +42,7 @@ function Cart(){
             <div>
                 <p>Cart Total Amount:<LuIndianRupee className="text-success"/> <span className="fw-bold">{getTotalCartAmount()}</span></p>
                 <div className="mt-3">
-                    <button className="btn btn-dark" onClick={()=>navigate('/order')}>Proceed To Chekout</button>
+                    <button className="btn btn-dark" onClick={()=>navigate('/checkout')}>Proceed To Chekout</button>
                 </div>
             </div>
 
