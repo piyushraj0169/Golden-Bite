@@ -2,6 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE =
+  import.meta.env.VITE_API_BASE || "http://localhost:3000";
+
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,8 +15,10 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
-      await axios.post("http://localhost:3000/auth/register", {
+      await axios.post(`${API_BASE}/auth/register`, {
         name,
         email,
         password,
@@ -21,7 +26,9 @@ function Register() {
 
       navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      setError(
+        err?.response?.data?.message || "Registration failed"
+      );
     }
   };
 
@@ -35,6 +42,7 @@ function Register() {
         <input
           className="form-control mb-3"
           placeholder="Name"
+          value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
@@ -43,6 +51,7 @@ function Register() {
           className="form-control mb-3"
           type="email"
           placeholder="Email"
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
@@ -51,6 +60,7 @@ function Register() {
           className="form-control mb-3"
           type="password"
           placeholder="Password"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
