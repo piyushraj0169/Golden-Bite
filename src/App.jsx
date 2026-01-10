@@ -14,7 +14,8 @@ import TermsAndConditions from './pages/TermsAndCondition'
 import Support from './pages/Support'
 
 import Checkout from "./pages/Checkout"
-import Success from "./pages/Success"
+// import Success from "./pages/Success"
+import Success from "./pages/success"
 
 
 import Login from "./pages/Login";
