@@ -1,9 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const API_BASE =
-  import.meta.env.VITE_API_BASE;
+import { postJSON } from "../utils/api"; // ✅ correct import
 
 function Register() {
   const [name, setName] = useState("");
@@ -18,7 +15,7 @@ function Register() {
     setError("");
 
     try {
-      await axios.post(`${API_BASE}/auth/register`, {
+      await postJSON("/auth/register", {
         name,
         email,
         password,
@@ -26,16 +23,13 @@ function Register() {
 
       navigate("/login");
     } catch (err) {
-      setError(
-        err?.response?.data?.message || "Registration failed"
-      );
+      setError(err.message || "Registration failed");
     }
   };
 
   return (
     <div className="container mt-5">
       <h2>Register</h2>
-
       {error && <p className="text-danger">{error}</p>}
 
       <form onSubmit={handleRegister}>

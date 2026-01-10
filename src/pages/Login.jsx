@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { postJSON } from "../utils/api"; // ✅ correct
 import { AuthContext } from "../context/AuthContext";
-import { api } from "../utils/api";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -19,22 +19,21 @@ function Login() {
     setError("");
 
     try {
-      const res = await api.post("/auth/login", {
+      const data = await postJSON("/auth/login", {
         email,
         password,
       });
 
-      login(res.data); // stores token + user
+      login(data); // token + user
       navigate(redirectTo);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.message || "Login failed");
     }
   };
 
   return (
     <div className="container mt-5">
       <h2>Login</h2>
-
       {error && <p className="text-danger">{error}</p>}
 
       <form onSubmit={handleLogin}>
@@ -56,16 +55,6 @@ function Login() {
 
         <button className="btn btn-dark w-100">Login</button>
       </form>
-
-      <p className="mt-3">
-        New user?{" "}
-        <span
-          style={{ cursor: "pointer", color: "blue" }}
-          onClick={() => navigate("/register")}
-        >
-          Register here
-        </span>
-      </p>
     </div>
   );
 }
