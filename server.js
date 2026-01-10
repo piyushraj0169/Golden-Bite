@@ -28,6 +28,27 @@ const __dirname  = path.dirname(__filename);
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: process.env.SMTP_SECURE === "true",
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+try {
+  await transporter.verify();
+  console.log("✅ SMTP verified");
+} catch (err) {
+  console.warn("⚠️ SMTP verify skipped:", err.message);
+}
+
+
+
 /* ---------- middleware ---------- */
 app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json());
@@ -99,18 +120,18 @@ const writeData = (d) => fs.writeFileSync(dataFile, JSON.stringify(d, null, 2));
 
 /* ---------- email ---------- */
 /* ---------- email (Gmail App Password) ---------- */
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.SMTP_USER,   // your Gmail
-    pass: process.env.SMTP_PASS,   // 16-char App Password
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.SMTP_USER,   // your Gmail
+//     pass: process.env.SMTP_PASS,   // 16-char App Password
+//   },
+// });
 
-transporter.verify((err) => {
-  if (err) console.error("✖ SMTP error:", err);
-  else console.log("✔ Gmail SMTP ready");
-});
+// transporter.verify((err) => {
+//   if (err) console.error("✖ SMTP error:", err);
+//   else console.log("✔ Gmail SMTP ready");
+// });
 
 
 /* ---------- generate invoice PDF ---------- */
