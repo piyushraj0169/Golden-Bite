@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postJSON } from "../utils/api"; // ✅ correct import
+import { postJSON } from "../utils/api";
 
 function Register() {
   const [name, setName] = useState("");
@@ -30,6 +30,7 @@ function Register() {
   return (
     <div className="container mt-5">
       <h2>Register</h2>
+
       {error && <p className="text-danger">{error}</p>}
 
       <form onSubmit={handleRegister}>

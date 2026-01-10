@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { postJSON } from "../utils/api"; // ✅ correct
+import { useNavigate } from "react-router-dom";
+import { postJSON } from "../utils/api";
 import { AuthContext } from "../context/AuthContext";
 
 function Login() {
@@ -10,9 +10,6 @@ function Login() {
 
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const redirectTo = location.state?.from || "/dashboard";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,8 +21,8 @@ function Login() {
         password,
       });
 
-      login(data); // token + user
-      navigate(redirectTo);
+      login(data);
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message || "Login failed");
     }
@@ -34,6 +31,7 @@ function Login() {
   return (
     <div className="container mt-5">
       <h2>Login</h2>
+
       {error && <p className="text-danger">{error}</p>}
 
       <form onSubmit={handleLogin}>
