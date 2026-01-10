@@ -7,10 +7,14 @@ import {BrowserRouter} from 'react-router-dom';
 
 import StoreContextProvider from './context/StoreContext.jsx';
 
+import { AuthProvider } from "./context/AuthContext";
+
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <StoreContextProvider>
+    <AuthProvider>
   <App />
+  </AuthProvider>
   </StoreContextProvider>
   </BrowserRouter>,
   

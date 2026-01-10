@@ -9,6 +9,9 @@ export default function Checkout() {
   const navigate = useNavigate();
   const { product_list, cartItems, getTotalCartAmount } = useContext(StoreContext);
 
+  
+
+
   const items = useMemo(() => (
     product_list
       .filter(p => cartItems[p._id] > 0)

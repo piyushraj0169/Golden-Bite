@@ -11,6 +11,7 @@ function Navbar(){
                  </button>
          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
            <div className="navbar-nav ms-auto">
+              <NavLink className="nav-link" to="/dashboard">Dashboard</NavLink>
               <NavLink className="nav-link" to="/">Home</NavLink>
               <NavLink className="nav-link" to="/productlist">Products</NavLink>
               <NavLink className="nav-link" to="/services">Services</NavLink>

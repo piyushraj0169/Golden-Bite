@@ -11,7 +11,16 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+
 dotenv.config();
+
+
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
@@ -23,6 +32,52 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch(err => console.error("❌ Mongo Error:", err));
+
+  const UserSchema = new mongoose.Schema({
+  name: String,
+  email: { type: String, unique: true },
+  password: String,
+}, { timestamps: true });
+
+const User = mongoose.model("User", UserSchema);
+
+
+
+
+// AUTH ROUTES
+app.post("/auth/register", async (req, res) => {
+  const { name, email, password } = req.body;
+  const exist = await User.findOne({ email });
+  if (exist) return res.status(400).json({ message: "User exists" });
+
+  const hashed = await bcrypt.hash(password, 10);
+  await User.create({ name, email, password: hashed });
+  res.json({ message: "Registered successfully" });
+});
+
+app.post("/auth/login", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) return res.status(400).json({ message: "Invalid credentials" });
+
+  const token = jwt.sign(
+    { id: user._id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  res.json({ token, user: { name: user.name, email: user.email } });
+});
+
+
+
 
 // static files
 app.use(express.static(path.join(__dirname, "public")));
@@ -58,60 +113,7 @@ transporter.verify((err, success) => {
 });
 
 
-/* ---------- utils: invoice pdf ---------- */
-// function generateInvoicePDF({ order, payment, customer, items, total }) {
-//   const fileName = `${order.id}.pdf`;
-//   const filePath = path.join(invoicesDir, fileName);
-
-//   const doc = new PDFDocument({ size: "A4", margin: 50 });
-//   const out = fs.createWriteStream(filePath);
-//   doc.pipe(out);
-
-//   doc.fontSize(18).text("GoldenBite - Tax Invoice");
-//   doc.moveDown(0.5);
-//   doc.fontSize(10)
-//     .text(`Order ID: ${order.id}`)
-//     .text(`Payment ID: ${payment?.razorpay_payment_id || "-"}`)
-//     .text(`Date: ${new Date().toLocaleString()}`);
-//   doc.moveDown();
-
-//   doc.fontSize(12).text("Bill To:");
-//   doc.fontSize(10)
-//     .text(`${customer.firstName} ${customer.lastName}`)
-//     .text(`${customer.phone}`)
-//     .text(`${customer.email}`)
-//     .text(`${customer.address}, ${customer.city}, ${customer.state} - ${customer.zip}`)
-//     .text(`${customer.country}`);
-//   doc.moveDown();
-
-//   doc.fontSize(12).text("Order Details:");
-//   doc.moveDown(0.5);
-//   doc.fontSize(10);
-
-//   const top = doc.y;
-//   const col = (x) => 50 + x;
-//   const row = (i) => top + i * 20;
-//   doc.text("Title",  col(0),   row(0));
-//   doc.text("Qty",    col(280), row(0));
-//   doc.text("Price",  col(330), row(0));
-//   doc.text("Amount", col(400), row(0));
-
-//   items.forEach((it, i) => {
-//     const y = row(i + 1);
-//     doc.text(it.title, col(0),   y);
-//     doc.text(String(it.qty), col(280), y);
-//     doc.text(String(it.price), col(330), y);
-//     doc.text(String(it.price * it.qty), col(400), y);
-//   });
-
-//   doc.moveDown(2);
-//   doc.fontSize(12).text(`Total: ₹ ${total}`, { align: "right" });
-//   doc.moveDown(2);
-//   doc.fontSize(9).text("Thank you for your purchase!", { align: "center" });
-//   doc.end();
-
-//   return new Promise((resolve) => out.on("finish", () => resolve({ filePath, fileName })));
-// }
+/* ---------- generate invoice PDF ---------- */
 
 function generateInvoicePDF({ order, payment, customer, items, total }) {
   const fileName = `${order.id}.pdf`;
@@ -225,8 +227,42 @@ function generateInvoicePDF({ order, payment, customer, items, total }) {
 
 /* ---------- routes ---------- */
 
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).json({ message: "Login required" });
+  }
+
+  // ✅ FIX: remove "Bearer "
+  const token = authHeader.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : authHeader;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+
+// get orders for logged-in user
+app.get("/my-orders", authMiddleware, (req, res) => {
+  const orders = readData();
+
+  const userOrders = orders.filter(
+    (o) => o.userId === req.user.id
+  );
+
+  res.json(userOrders);
+});
+
+
 // create order
-app.post("/create-order", async (req, res) => {
+app.post("/create-order",authMiddleware, async (req, res) => {
   try {
     const { amount, currency = "INR", receipt = "receipt#1", notes = {}, customer, items } = req.body;
     if (!amount || amount <= 0) return res.status(400).json({ error: "Invalid amount" });
@@ -234,15 +270,26 @@ app.post("/create-order", async (req, res) => {
     const rpOrder = await razorpay.orders.create({ amount: amount * 100, currency, receipt, notes });
 
     const orders = readData();
+    // orders.push({
+    //   order_id: rpOrder.id,
+    //   amount: rpOrder.amount,
+    //   currency: rpOrder.currency,
+    //   status: rpOrder.status,        // created
+    //   created_at: rpOrder.created_at,
+    //   customer,                       // store what frontend sent
+    //   items
+    // });
     orders.push({
-      order_id: rpOrder.id,
-      amount: rpOrder.amount,
-      currency: rpOrder.currency,
-      status: rpOrder.status,        // created
-      created_at: rpOrder.created_at,
-      customer,                       // store what frontend sent
-      items
-    });
+       order_id: rpOrder.id,
+       userId: req.user.id,   // 🔥 LINK ORDER TO USER
+       amount: rpOrder.amount,
+       currency: rpOrder.currency,
+       status: rpOrder.status,
+       created_at: rpOrder.created_at,
+       customer,
+       items,
+   });
+
     writeData(orders);
 
     res.json({ order: rpOrder, key: process.env.RAZORPAY_KEY_ID });
@@ -253,7 +300,7 @@ app.post("/create-order", async (req, res) => {
 });
 
 // verify, invoice, email
-app.post("/verify-payment", async (req, res) => {
+app.post("/verify-payment",authMiddleware, async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, customer: bodyCustomer, items: bodyItems } = req.body;
 
@@ -291,32 +338,7 @@ app.post("/verify-payment", async (req, res) => {
       total,
     });
 
-    // send email (log errors if any)
-    // if (customer?.email) {
-    //   try {
-    //     const info = await transporter.sendMail({
-    //       from: process.env.MAIL_FROM,
-    //       to: customer.email,
-    //       subject: `Order Confirmed - ${razorpay_order_id}`,
-    //       text: `Hi ${customer.firstName || ""},
-    //            Your payment was successful.
-
-    //            Order ID: ${razorpay_order_id}
-    //              Payment ID: ${razorpay_payment_id}
-    //               Total: ₹${total}
-
-    //                 Invoice attached.
-
-    //                  — GoldenBite`,
-    //              attachments: [{ filename: fileName, path: filePath }],
-    //     });
-    //     console.log("✔ Mail sent:", info.messageId);
-    //   } catch (mailErr) {
-    //     console.error("✖ sendMail error:", mailErr);
-    //   }
-    // } else {
-    //   console.warn("No customer email; skip email.");
-    // }
+// send email with invoice
 
  if (customer?.email) {
   console.log("📨 Sending Order Confirmation to:", customer.email);
@@ -402,254 +424,4 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
 
-// import express from "express";
-// import bodyParser from "body-parser";
-// import Razorpay from "razorpay";
-// import path from "path";
-// import fs from "fs";
-// import crypto from "crypto";
-
-// import PDFDocument from "pdfkit";
-// import nodemailer from "nodemailer";
-// import dotenv from "dotenv";
-// dotenv.config();
-
-// const cors = require("cors");
-// app.use(cors());
-
-
-// const app = express();
-// const PORT = process.env.PORT || 3000;
-
-// // --- Middleware
-// app.use(cors({ origin: true, credentials: true }));
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-// // serve static pages & invoices
-// const __dirname = path.dirname(new URL(import.meta.url).pathname.replace(/^\/+([A-Za-z]:)/, '$1'));
-// app.use(express.static(path.join(__dirname, "public")));
-// app.use("/invoices", express.static(path.join(__dirname, "invoices")));
-
-// if (!fs.existsSync(path.join(__dirname, "invoices"))) fs.mkdirSync(path.join(__dirname, "invoices"));
-
-// // --- Razorpay
-// const razorpay = new Razorpay({
-//   key_id: process.env.RAZORPAY_KEY_ID,
-//   key_secret: process.env.RAZORPAY_KEY_SECRET,
-// });
-
-// // --- Simple file store for created orders (demo)
-// const dataFile = path.join(__dirname, "order.json");
-// if (!fs.existsSync(dataFile)) fs.writeFileSync(dataFile, "[]");
-// const readData = () => JSON.parse(fs.readFileSync(dataFile));
-// const writeData = (d) => fs.writeFileSync(dataFile, JSON.stringify(d, null, 2));
-
-// // --- Email transporter
-// const transporter = nodemailer.createTransport({
-//   host: process.env.SMTP_HOST,
-//   port: Number(process.env.SMTP_PORT),
-//   secure: process.env.SMTP_SECURE === "true",
-//   auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-// });
-
-// // UTIL: create invoice PDF and return file path
-// function generateInvoicePDF({ order, payment, customer, items, total }) {
-//   const fileName = `${order.id}.pdf`;
-//   const filePath = path.join(__dirname, "invoices", fileName);
-
-//   const doc = new PDFDocument({ size: "A4", margin: 50 });
-//   const stream = fs.createWriteStream(filePath);
-//   doc.pipe(stream);
-
-//   // Header
-//   doc.fontSize(20).text("GoldenBite - Tax Invoice", { align: "left" });
-//   doc.moveDown(0.5);
-//   doc.fontSize(10).text(`Order ID: ${order.id}`);
-//   doc.text(`Payment ID: ${payment?.razorpay_payment_id || "-"}`);
-//   doc.text(`Date: ${new Date().toLocaleString()}`);
-//   doc.moveDown();
-
-//   // Customer
-//   doc.fontSize(12).text("Bill To:");
-//   doc.fontSize(10).text(`${customer.firstName} ${customer.lastName}`);
-//   doc.text(`${customer.phone}`);
-//   doc.text(`${customer.email}`);
-//   doc.text(`${customer.address}, ${customer.city}, ${customer.state} - ${customer.zip}`);
-//   doc.text(`${customer.country}`);
-//   doc.moveDown();
-
-//   // Items table
-//   doc.fontSize(12).text("Order Details:");
-//   doc.moveDown(0.5);
-//   doc.fontSize(10);
-
-//   const tableTop = doc.y;
-//   const col = (x) => 50 + x;
-//   const row = (y) => tableTop + y;
-
-//   doc.text("Title", col(0), row(0));
-//   doc.text("Qty", col(280), row(0));
-//   doc.text("Price", col(330), row(0));
-//   doc.text("Amount", col(400), row(0));
-
-//   let i = 1;
-//   items.forEach((it) => {
-//     const y = row(i * 20);
-//     doc.text(it.title, col(0), y);
-//     doc.text(it.qty.toString(), col(280), y);
-//     doc.text(`${it.price}`, col(330), y);
-//     doc.text(`${it.price * it.qty}`, col(400), y);
-//     i++;
-//   });
-
-//   doc.moveDown(2);
-//   doc.fontSize(12).text(`Total: ₹ ${total}`, { align: "right" });
-
-//   doc.moveDown(2);
-//   doc.fontSize(9).text("Thank you for your purchase!", { align: "center" });
-
-//   doc.end();
-
-//   return new Promise((resolve) => {
-//     stream.on("finish", () => resolve({ filePath, fileName }));
-//   });
-// }
-
-// // --- Create Razorpay order
-// app.post("/create-order", async (req, res) => {
-//   try {
-//     const { amount, currency = "INR", receipt = "receipt#1", notes = {}, customer, items } = req.body;
-
-//     if (!amount || amount <= 0) return res.status(400).json({ error: "Invalid amount" });
-
-//     const options = { amount: amount * 100, currency, receipt, notes };
-//     const order = await razorpay.orders.create(options);
-
-//     const orders = readData();
-//     orders.push({ order_id: order.id, amount: order.amount, currency: order.currency, status: order.status, created_at: order.created_at, customer, items });
-//     writeData(orders);
-
-//     res.json({ order, key: process.env.RAZORPAY_KEY_ID });
-//   } catch (e) {
-//     console.error("create-order error:", e);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
-
-// // --- Verify payment, generate invoice, send email
-// // const { razorpay_order_id, razorpay_payment_id, razorpay_signature, customer, items } = req.body;
-
-// app.post("/verify-payment", async (req, res) => {
-//   try {
-//     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, customer, items } = req.body;
-
-//     const secret = process.env.RAZORPAY_KEY_SECRET;
-//     const expected = crypto
-//       .createHmac("sha256", secret)
-//       .update(razorpay_order_id + "|" + razorpay_payment_id)
-//       .digest("hex");
-
-//     if (expected !== razorpay_signature) {
-//       return res.status(400).json({ status: "failure", message: "Invalid signature" });
-//     }
-
-//     // ✅ Update stored order + store customer & items
-//     const orders = readData();
-//     const idx = orders.findIndex((o) => o.order_id === razorpay_order_id);
-//     if (idx !== -1) {
-//       orders[idx].status = "paid";
-//       orders[idx].payment_id = razorpay_payment_id;
-//       orders[idx].customer = customer; // ✅ Save customer details
-//       orders[idx].items = items;       // ✅ Save ordered items
-//       writeData(orders);
-//     }
-
-//     const orderRow = orders.find((o) => o.order_id === razorpay_order_id);
-//     const total = (orderRow.amount || 0) / 100;
-
-//     // ✅ Generate Invoice PDF now with REAL details
-//     const { filePath, fileName } = await generateInvoicePDF({
-//       order: { id: razorpay_order_id },
-//       payment: { razorpay_payment_id },
-//       customer,
-//       items,
-//       total,
-//     });
-
-//     // ✅ Send Confirmation Email with Invoice
-//     if (customer?.email) {
-//       await transporter.sendMail({
-//         from: process.env.MAIL_FROM,
-//         to: customer.email,
-//         subject: `Order Confirmed - ${razorpay_order_id}`,
-//         text: `Hi ${customer.firstName},\n\nThank you for your order!\nYour payment was successful.\n\nOrder ID: ${razorpay_order_id}\nPayment ID: ${razorpay_payment_id}\nTotal Amount Paid: ₹${total}\n\nYour invoice is attached.\n\n— GoldenBite`,
-//         attachments: [{ filename: fileName, path: filePath }],
-//       });
-
-//       console.log("✅ Email sent to:", customer.email);
-//     } else {
-//       console.log("❗ No customer email found, skipping email.");
-//     }
-
-//     console.log("📦 Customer received:", customer);
-//     console.log("🛒 Items received:", items);
- 
-
-//     // ✅ Send response back to frontend
-//     res.status(200).json({
-//       status: "success",
-//       message: "Payment verified and invoice email sent",
-//       invoiceUrl: `/invoices/${fileName}`,
-//       orderId: razorpay_order_id,
-//       paymentId: razorpay_payment_id,
-//       total,
-//     });
-
-//   } catch (e) {
-//     console.error("verify-payment error:", e);
-//     res.status(500).json({ status: "error", message: "Internal Server Error" });
-//   }
-// });
-
-
-// app.get("/payment-success", (req, res) => res.sendFile(path.join(__dirname, "public", "success.html")));
-// app.get("/payment-failure", (req, res) => res.sendFile(path.join(__dirname, "public", "failure.html")));
-
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
-// if (customer?.email) {
-//   console.log("📨 Attempting to send email to:", customer.email);
-
-//   transporter.sendMail({
-//     from: process.env.MAIL_FROM,
-//     to: customer.email,
-//     subject: `Order Confirmed - ${razorpay_order_id}`,
-//     text: `Hi ${customer.firstName},\n\nYour payment was successful.\nInvoice is attached.\n\n— GoldenBite`,
-//     attachments: [{ filename: fileName, path: filePath }],
-//   }, (err, info) => {
-//     if (err) {
-//       console.error("❌ Email send error:", err);
-//     } else {
-//       console.log("✅ Email sent successfully:", info.response);
-//     }
-//   });
-
-// } else {
-//   console.log("❗ No email found in customer object.");
-// }
-
-//     res.status(200).json({
-//       status: "success",
-//       message: "Payment verified",
-//       invoiceUrl: `/invoices/${fileName}`,
-//       orderId: razorpay_order_id,
-//       paymentId: razorpay_payment_id,
-//       total,
-//     });
-//   } catch (e) {
-//     console.error("verify-payment error:", e);
-//     res.status(500).json({ status: "error", message: "Internal Server Error" });
-//   }
-// });
+// end of server.js

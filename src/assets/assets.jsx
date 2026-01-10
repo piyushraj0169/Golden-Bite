@@ -37,28 +37,28 @@ export const pruduct_list = [
         _id:1,
         name:" Chocolate Cake",
         image:food1,
-        price:200,
+        price:450,
         category:"cake"
     },
     {
         _id:2,
         name:" Vanilla cake",
         image:food2,
-        price:100,
+        price:350,
         category:"cake"
     },
     {
         _id:3,
         name:" Strawberry Cake",
         image:food3,
-        price:150,
+        price:380,
         category:"cake"
     },
     {
         _id:4,
         name:" Red Velvet Cake",
         image:food4,
-        price:250,
+        price:510,
         category:"cake"
     },
 
@@ -66,7 +66,7 @@ export const pruduct_list = [
         _id:5,
         name:"Classic Salad",
         image:food5,
-        price:75,
+        price:275,
         category:"Salad"
     },
 
@@ -74,7 +74,7 @@ export const pruduct_list = [
         _id:6,
         name:"Greek Salad",
         image:food6,
-        price:85,
+        price:320,
         category:"Salad"
     },
        
@@ -82,7 +82,7 @@ export const pruduct_list = [
         _id:7,
         name:"Caesar Salad",
         image:food7,
-        price:50,
+        price:175,
         category:"salad"
     },
       
@@ -90,7 +90,7 @@ export const pruduct_list = [
         _id:8,
         name:"Fruit Salad",
         image:food8,
-        price:50,
+        price:330,
         category:"Salad"
     },
       
@@ -98,7 +98,7 @@ export const pruduct_list = [
         _id:9,
         name:"Brownies",
         image:food9,
-        price:50,
+        price:250,
         category:"Sweetsandbakery"
     },
       
@@ -106,7 +106,7 @@ export const pruduct_list = [
         _id:10,
         name:"Fruit Tarts",
         image:food10,
-        price:50,
+        price:410,
         category:"Sweetsandbakery"
     },
       
@@ -114,7 +114,7 @@ export const pruduct_list = [
         _id:11,
         name:"Kaju Katli",
         image:food11,
-        price:50,
+        price:1100,
         category:"Sweetsandbakery"
     },
       
@@ -122,14 +122,14 @@ export const pruduct_list = [
         _id:12,
         name:"Donuts",
         image:food12,
-        price:50,
+        price:100,
         category:"Sweetsandbakery"
     },
     {
         _id:13,
         name:"Chocolate Milkshake",
         image:food13,
-        price:75,
+        price:350,
         category:"Beverages"
     },
 
@@ -137,7 +137,7 @@ export const pruduct_list = [
         _id:14,
         name:"Cold Coffee",
         image:food14,
-        price:85,
+        price:410,
         category:"Beverages"
     },
        
@@ -145,7 +145,7 @@ export const pruduct_list = [
         _id:15,
         name:"Coffee",
         image:food15,
-        price:50,
+        price:175,
         category:"Beverages"
     },
       
@@ -153,7 +153,7 @@ export const pruduct_list = [
         _id:16,
         name:"Hot Chocolate",
         image:food16,
-        price:50,
+        price:150,
         category:"Beverages"
     },
       
@@ -161,7 +161,7 @@ export const pruduct_list = [
         _id:17,
         name:"Burger",
         image:food17,
-        price:50,
+        price:125,
         category:"Fast Food"
     },
       
@@ -169,7 +169,7 @@ export const pruduct_list = [
         _id:18,
         name:"Pizza",
         image:food18,
-        price:50,
+        price:350,
         category:"Fast Food"
     },
       
@@ -177,7 +177,7 @@ export const pruduct_list = [
         _id:19,
         name:"Noodle",
         image:food19,
-        price:50,
+        price:250,
         category:"Fast Food"
     },
       
@@ -185,7 +185,7 @@ export const pruduct_list = [
         _id:20,
         name:"Manchurian",
         image:food20,
-        price:50,
+        price:275,
         category:"Fast Food"
     },
       

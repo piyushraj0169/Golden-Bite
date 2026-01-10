@@ -17,6 +17,12 @@ import Checkout from "./pages/Checkout"
 import Success from "./pages/Success"
 
 
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./utils/ProtectedRoute";
+
+
 
 
 
@@ -37,6 +43,17 @@ function App()
         <Route path='/productlist' element={<Products />} />
         <Route path='/termsandcondition' element={<TermsAndConditions/>} />
         <Route path='/support' element={<Support />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes> 
      
       <Footer/>
