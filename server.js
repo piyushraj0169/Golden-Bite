@@ -340,60 +340,111 @@ app.post("/verify-payment",authMiddleware, async (req, res) => {
 
 // send email with invoice
 
- if (customer?.email) {
-  console.log("📨 Sending Order Confirmation to:", customer.email);
+if (!customer?.email) {
+  console.warn("❌ Customer email missing, email not sent");
+} else {
+  console.log("📧 Sending order confirmation to:", customer.email);
 
   const mailOptions = {
-    from: `GoldenBite <${process.env.SMTP_USER}>`,
+    from: process.env.MAIL_FROM, // ✅ FIXED
     to: customer.email,
-    subject: `✅ Order Confirmed - ${razorpay_order_id}`,
+    subject: `Order Confirmed - ${razorpay_order_id}`,
     html: `
-      <h2>Thank you for your order, ${customer.firstName}!</h2>
+      <h2>Thank you for your order, ${customer.firstName}</h2>
       <p>Your order has been successfully placed and paid.</p>
 
-      <h3>Delivery Information:</h3>
+      <h3>Delivery Information</h3>
       <p>
-        ${customer.firstName} ${customer.lastName}<br>
-        ${customer.address}, ${customer.city}, ${customer.state} - ${customer.zip}<br>
-        ${customer.country}<br>
+        ${customer.firstName} ${customer.lastName}<br/>
+        ${customer.address}, ${customer.city}, ${customer.state} - ${customer.zip}<br/>
+        ${customer.country}<br/>
         Phone: ${customer.phone}
       </p>
 
       <h3>Total Paid: ₹${total}</h3>
 
-      <p>Your invoice is attached. You can download it anytime:</p>
-      <a href="${req.protocol}://${req.get("host")}/invoices/${fileName}">Download Invoice</a>
+      <p>Your invoice is attached.</p>
+      <a href="${req.protocol}://${req.get("host")}/invoices/${fileName}">
+        Download Invoice
+      </a>
 
-      <br><br>
+      <br/><br/>
       <strong>GoldenBite</strong>
     `,
-    attachments: [{ filename: fileName, path: filePath }]
+    attachments: [
+      {
+        filename: fileName,
+        path: filePath,
+      },
+    ],
   };
 
-  transporter.sendMail(mailOptions).then(() =>
-    console.log("✅ Email Sent Successfully")
-  ).catch(err =>
-    console.error("❌ Email Error:", err)
-  );
-} else {
-  console.warn("❗ Customer email missing, email not sent.");
+  try {
+    await transporter.verify(); // ✅ IMPORTANT
+    console.log("✅ SMTP verified");
+
+    const info = await transporter.sendMail(mailOptions); // ✅ AWAIT
+    console.log("✅ Email sent:", info.messageId);
+  } catch (err) {
+    console.error("❌ Email send failed:", err);
+  }
 }
 
 
+//  if (customer?.email) {
+//   console.log("📨 Sending Order Confirmation to:", customer.email);
 
-    res.status(200).json({
-      status: "success",
-      message: "Payment verified",
-      invoiceUrl: `/invoices/${fileName}`,
-      orderId: razorpay_order_id,
-      paymentId: razorpay_payment_id,
-      total,
-    });
-  } catch (e) {
-    console.error("verify-payment error:", e);
-    res.status(500).json({ status: "error", message: "Internal Server Error" });
-  }
-});
+//   const mailOptions = {
+//     from: `GoldenBite <${process.env.SMTP_USER}>`,
+//     to: customer.email,
+//     subject: `✅ Order Confirmed - ${razorpay_order_id}`,
+//     html: `
+//       <h2>Thank you for your order, ${customer.firstName}!</h2>
+//       <p>Your order has been successfully placed and paid.</p>
+
+//       <h3>Delivery Information:</h3>
+//       <p>
+//         ${customer.firstName} ${customer.lastName}<br>
+//         ${customer.address}, ${customer.city}, ${customer.state} - ${customer.zip}<br>
+//         ${customer.country}<br>
+//         Phone: ${customer.phone}
+//       </p>
+
+//       <h3>Total Paid: ₹${total}</h3>
+
+//       <p>Your invoice is attached. You can download it anytime:</p>
+//       <a href="${req.protocol}://${req.get("host")}/invoices/${fileName}">Download Invoice</a>
+
+//       <br><br>
+//       <strong>GoldenBite</strong>
+//     `,
+//     attachments: [{ filename: fileName, path: filePath }]
+//   };
+
+//   transporter.sendMail(mailOptions).then(() =>
+//     console.log("✅ Email Sent Successfully")
+//   ).catch(err =>
+//     console.error("❌ Email Error:", err)
+//   );
+// } else {
+//   console.warn("❗ Customer email missing, email not sent.");
+// }
+
+
+
+//     res.status(200).json({
+//       status: "success",
+//       message: "Payment verified",
+//       invoiceUrl: `/invoices/${fileName}`,
+//       orderId: razorpay_order_id,
+//       paymentId: razorpay_payment_id,
+//       total,
+//     });
+//   } catch (e) {
+//     console.error("verify-payment error:", e);
+//     res.status(500).json({ status: "error", message: "Internal Server Error" });
+//   }
+// });
 
 /* optional success/failure pages (if you decide to redirect there) */
 app.get("/payment-success", (_req, res) =>
