@@ -11,8 +11,11 @@
 
 
 .banner{
-  background-image: linear-gradient(#000000aa,#000000a2), url('home.jpg');
-  height: 93vh;
+  background-image: 
+    linear-gradient(#000000aa, #000000a2),
+    url('/home.jpg');
+ 
+    height: 93vh;
   background-repeat: no-repeat;
 
   background-size: cover;
