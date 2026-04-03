@@ -1,0 +1,332 @@
+/* Admin Panel Specific Styles - Premium Dark Mode */
+body .admin-container {
+  font-family: 'Inter', sans-serif !important;
+  background-color: #121212; /* Deep dark background */
+  padding-top: 0 !important;
+  color: #e0e0e0;
+}
+
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.admin-sidebar {
+  width: 250px;
+  background: #1a1a1a;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  border-right: 1px solid #333;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.admin-brand {
+  padding: 24px;
+  border-bottom: 1px solid #333;
+}
+
+.admin-brand h3 {
+  color: #ffffff !important;
+}
+
+.admin-brand h3 span {
+  color: #d4af37 !important; /* Gold */
+}
+
+.admin-brand p {
+  color: #d4af37 !important; /* Elegant Gold Subtitle */
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.75rem !important;
+  margin-top: 4px !important;
+}
+
+.admin-nav-item {
+  margin: 4px 16px;
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: #a0a0a0;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.admin-nav-link:hover, .admin-nav-link.active {
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37 !important;
+  box-shadow: inset 4px 0 0 #d4af37;
+}
+
+.admin-nav-link .nav-icon {
+  margin-right: 14px;
+  font-size: 1.1rem;
+}
+
+/* Main Area */
+.admin-main {
+  flex: 1;
+  margin-left: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  height: 70px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.admin-page-title {
+  color: #ffffff !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.admin-content {
+  flex: 1;
+  background: #121212;
+}
+
+/* Dashboard Cards */
+.admin-stat-card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #333;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 8px 25px rgba(212, 175, 55, 0.15);
+  border-color: #d4af37;
+}
+
+.stat-icon-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* Dark variant colors for stat icons */
+.bg-light-primary { background: rgba(212, 175, 55, 0.1); color: #d4af37; } /* Gold accent */
+.bg-light-success { background: rgba(5, 205, 153, 0.1); color: #05cd99; }
+.bg-light-warning { background: rgba(255, 181, 71, 0.1); color: #ffb547; }
+.bg-light-danger { background: rgba(238, 93, 80, 0.1); color: #ee5d50; }
+
+.stat-title {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+  font-weight: 500;
+  margin: 0;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Base Card */
+.admin-card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  border: 1px solid #333;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.5);
+  padding: 24px;
+}
+
+.admin-table th {
+  color: #d4af37; /* Gold table headers to match user dashboard */
+  font-weight: 500;
+  font-size: 0.85rem;
+  border-bottom: 2px solid #333;
+  padding-bottom: 12px;
+}
+
+.admin-table td {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 0.9rem;
+  vertical-align: middle;
+  padding: 16px 8px;
+  border-bottom: 1px solid #222;
+}
+
+.admin-table tbody tr:hover td {
+  background-color: #222;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending { background: rgba(255, 181, 71, 0.2); color: #ffb547; border: 1px solid #ffb547; }
+.status-preparing { background: rgba(212, 175, 55, 0.2); color: #d4af37; border: 1px solid #d4af37; }
+.status-completed { background: rgba(5, 205, 153, 0.2); color: #05cd99; border: 1px solid #05cd99; }
+.status-cancelled { background: rgba(238, 93, 80, 0.2); color: #ee5d50; border: 1px solid #ee5d50; }
+
+/* Deep Overrides for Bootstrap Defaults (Tables, Forms, Buttons) */
+.admin-container .bg-white,
+.admin-container .bg-light { 
+  background-color: #1a1a1a !important; 
+  border-color: #333 !important; 
+}
+.admin-container .text-dark,
+.admin-container .dropdown-menu .text-dark,
+.admin-container .table .text-dark { 
+  color: #ffffff !important; 
+  --bs-text-opacity: 1;
+}
+.admin-container .text-secondary,
+.admin-container .text-muted { 
+  color: #e0e0e0 !important; 
+}
+.admin-container .text-primary { 
+  color: #d4af37 !important; 
+}
+
+/* Tables Overhaul */
+.admin-container .table {
+  --bs-table-bg: transparent !important;
+  --bs-table-color: #ffffff !important;
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+.admin-container .table td,
+.admin-container .table th,
+.admin-container .table > :not(caption) > * > * {
+  background-color: transparent !important;
+  color: #ffffff !important;
+  border-bottom-color: #333 !important;
+}
+
+.admin-container .table > thead > tr > th {
+  color: #d4af37 !important;
+  border-bottom: 2px solid #333 !important;
+}
+.admin-container .table-hover > tbody > tr:hover > * {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Form Controls (Inputs, Selects, Search) */
+.admin-container .form-control,
+.admin-container .form-select {
+  background-color: #222 !important;
+  border: 1px solid #333 !important;
+  color: #ffffff !important;
+}
+.admin-container .form-control:focus,
+.admin-container .form-select:focus {
+  background-color: #2a2a2a !important;
+  border-color: #d4af37 !important;
+  box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25) !important;
+  color: #ffffff !important;
+}
+.admin-container .form-control::placeholder {
+  color: #888 !important;
+}
+
+/* Primary Button Translation to Gold */
+.admin-container .btn-primary {
+  background-color: #d4af37 !important;
+  border-color: #d4af37 !important;
+  color: #121212 !important;
+  font-weight: 600 !important;
+}
+.admin-container .btn-primary:hover {
+  background-color: #b5952f !important;
+  border-color: #b5952f !important;
+}
+.admin-container .btn-outline-primary {
+  color: #d4af37 !important;
+  border-color: #d4af37 !important;
+}
+.admin-container .btn-outline-primary:hover {
+  background-color: #d4af37 !important;
+  color: #121212 !important;
+}
+
+/* Secondary & Cancel Buttons */
+.admin-container .btn-light,
+.admin-container .btn-secondary,
+.admin-container .btn-outline-secondary {
+  background-color: #333 !important;
+  border-color: #444 !important;
+  color: #ffffff !important;
+}
+.admin-container .btn-light:hover,
+.admin-container .btn-secondary:hover,
+.admin-container .btn-outline-secondary:hover {
+  background-color: #444 !important;
+  color: #ffffff !important;
+  border-color: #555 !important;
+}
+
+/* Smart Insights & Gradients (Translating vivid blue to dark/gold) */
+.admin-container .bg-gradient,
+.admin-container .bg-primary.text-white {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%) !important;
+  border: 1px solid #d4af37 !important;
+}
+
+/* Styling overriding for specific components like generic cards */
+.admin-container .card {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+}
+.admin-container .card-header {
+  border-bottom: 1px solid #333;
+  color: #d4af37;
+}
+
+/* Modals inside Admin */
+.admin-container .modal-content {
+  background-color: #1a1a1a;
+  border: 1px solid #d4af37;
+  color: #ffffff;
+}
+.admin-container .modal-header {
+  border-bottom: 1px solid #333;
+}
+.admin-container .modal-footer {
+  border-top: 1px solid #333;
+}
+.dropdown-menu {
+  background: #1a1a1a !important;
+  border: 1px solid #333 !important;
+}
+.dropdown-item {
+  color: #fff !important;
+}
+.dropdown-item:hover {
+  background: #333 !important;
+}
