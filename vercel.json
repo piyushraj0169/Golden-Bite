@@ -1,9 +1,5 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/((?!api/|invoices/|uploads/).*)", "destination": "/index.html" }
   ]
 }
-
-
-
-
