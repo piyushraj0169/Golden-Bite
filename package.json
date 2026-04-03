@@ -10,6 +10,10 @@
     "start:frontend": "npm run dev --prefix frontend"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@vitejs/plugin-react": "^6.0.1",
+    "concurrently": "^8.2.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "vite": "^8.0.3"
   }
 }
