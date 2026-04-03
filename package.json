@@ -7,7 +7,7 @@
     "backend"
   ],
   "scripts": {
-    "build": "npm run build --workspace=frontend && cp -r frontend/dist dist",
+    "build": "npm run build --workspace=frontend && rm -rf dist && cp -r frontend/dist dist && cp vercel.json dist/",
     "install:all": "npm install",
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:backend": "npm run server --workspace=backend",

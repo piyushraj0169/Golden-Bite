@@ -1,0 +1,8 @@
+backend/
+node_modules/
+.git/
+README.md
+implementation_plan.md
+task.md
+walkthrough.md
+vercel_routing_analysis.md
