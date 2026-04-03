@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "build": "npm install --prefix frontend && npm run build --prefix frontend && cp -r frontend/dist ./dist",
     "install:all": "npm install && npm explore backend -- npm install && npm explore frontend -- npm install",
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:backend": "npm run server --prefix backend",
